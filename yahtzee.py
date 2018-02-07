@@ -1,4 +1,5 @@
 from random import randint
+import pdb
 """import pandas as pd
 import json"""
 
@@ -14,22 +15,19 @@ logging.basicConfig(
 logging.disable(logging.CRITICAL)
 """
 
-roundcount = 0
-rolls = []
-score = 0
-number_of_dice = 5
-game = {}
-round_done = False
+
+
 #round_roll_count = 0
 
-def diceroll():
+def dieroll():
     return randint(1,6)
 
 
 # rolls all 5 dice
 def roll_all():
-    for i in range(number_of_dice):
-        rolls.append(diceroll())
+    rolls = []
+    for i in range(5):
+        rolls.append(dieroll())
     return rolls
 
 # I have forgotten what this function is for
@@ -53,16 +51,16 @@ def sanit(input):
 
 
 # rerolls specified dice from a list of user inputs
-def reroll(l):
+def reroll(l,rolls):
     for i in l:
         index = ord(i)-97
-        rolls[index] = diceroll()
+        rolls[index] = dieroll()
     return rolls
 
 
 
 # function for displaying the dice results to the user
-def display_roll():
+def display_roll(rolls):
     n = 65
     for i in rolls:
         string = chr(n)+ ": " + str(i)
@@ -74,7 +72,7 @@ def display_roll():
 
 
 
-def get_choice():
+def get_choice(rolls):
     #this section asks the user for a reroll choice
     rerollyn = ""
     rerollyn = raw_input("Reroll? (Y / N) ")
@@ -83,52 +81,142 @@ def get_choice():
     if sanit(rerollyn[0]) == "n":
         #if the user inputs a string starting with "n", no re-roll happens
         print("Keeping Rolls")
-        round_done = True
-        print(round_done)
+
+        return True
+
     elif sanit(rerollyn[0]) == "y":
         #if the user inputs a string starting with "y" it will ask for which dice to reroll
         user_selection = raw_input("Reroll? (A, B, C, D, E?) ")
         print(" ")
         print("Rerolling....")
 
-        reroll((convert_to_list(user_selection)))
+        reroll(convert_to_list(user_selection),rolls)
 
         print("Your new rolls are: ")
-        display_roll()
+        display_roll(rolls)
+        return False
 
 
     else:
         #if the user does a keyboard smash, it will start over
         print("I didn't understand that input. Please Try again.")
-        get_choice()
-def input_upper_lower():
-    print("Please select a scoring Category.")
-    upper_lower = raw_input("Upper(A) or Lower(B) categories? ")
-    if upper_lower.lower() == "a":
-        upper = True
-    elif upper_lower.lower() =="b":
-        lower = True
+        get_choice(rolls)
+
+
+def stringify_key_value_cat(key,value):
+    return value + "(" +  str(key) + ")"
+
+def display_categories(categories):
+    string_list_up = []
+    string_list_low = []
+
+    for key in filter(lambda key: categories[key][0],categories):
+        if key < 7:
+            string_list_up.append(stringify_key_value_cat(key,categories[key][1]))
+        else:
+            string_list_low.append(stringify_key_value_cat(key,categories[key][1]))
+
+    if string_list_up == []:
+        print("Upper: None")
+    else:
+        print("Upper: "+ ", ".join(string_list_up))
+    if string_list_low == []:
+        print("Lower: None.")
+    else:
+        print("Lower: " + ", ".join(string_list_low))
+
+#This function displays remaining score categories and returns a valid user selection
+def select_category_fun(rolls,categories):
+
+    print("Please select a scoring Category from the remaining options: ")
+
+    """cat_list_upper = ""
+    cat_list_lower = ""
+
+    cat_list_upper_sel = ""
+    cat_list_lower_sel = ""
+
+    cat_keys = categories.keys()
+
+
+
+    for key in categories:
+        #pdb.set_trace()
+
+        if key < 7:
+
+            if categories[key][0] == True:
+            #print("this is the boolian: ", str(categories[key][0]))
+            #print("this is the category: ")
+            #print(categories[key][1])
+
+                cat_string_upper = categories[key][1]
+
+                #cat_list_upper = cat_list_upper + ", " + cat_string_upper
+                cat_list_upper = cat_list_upper + cat_string_upper + "(" +  str(key) + "), "
+
+            #print(cat_list)
+        elif key >6 :
+            if categories[key][0] == True:
+
+
+                cat_string_lower = categories[key][1]
+
+                #cat_list_lower = cat_list_lower + cat_string_lower +"(" +  str(categories[key][2]) + ")"
+                cat_list_lower =
+    cat_list_upper = cat_list_upper[:-2]
+    cat_list_lower = cat_list_lower[:-2]
+    print("Upper: "+ str(cat_list_upper))
+    print("Lower: "+ str(cat_list_lower))"""
+    #print("In the upper section there are six categories. The score in each of these boxes is determined by adding the total number of dice matching that box.")
+
+    display_categories(categories)
+
+    cat_selection = int(raw_input("Select a category to score this round: "))
+    if cat_selection > 0 and  cat_selection < 14:
+        if categories[cat_selection][0] == False:
+            print("That category is no longer available. Please try again. ")
+            select_category_fun(categories,rolls)
+        else:
+            return int(cat_selection)
     else:
         print("I didn't understand that response. Please try again.")
-        input_upper_lower()
+        select_category_fun(categories,rolls)
 
 
+#This function takes in a user selection and a set of rolls, and returns a list of score criteria
+def score_fun(rolls,cat_selection):
+    score_list = [0,0,False]
+    score_upper = 0
+    score_lower = 0
+    yahtzee = False
+    if cat_selection < 7:
+        for i in rolls:
+            if i == cat_selection:
+                score_upper +=cat_selection
+    score_list[0] = score_upper
+    score_list[1] = score_lower
+    score_list[2] = yahtzee
+
+
+
+
+
+    return score_list
 
 # Function for running a single round
-def new_round():
+def new_round(categories):
     round_done = False
-    upper = False
-    lower = False
-    #this section lists the round number
-    print("Round "),
-    print(roundcount+1)
-    print(" ")
+    rolls = []
+
+    round_output = {}
+
 
     #this section gives the initial roll
-    roll_all()
+    rolls = roll_all()
     print("Your initial rolls are: ")
-    display_roll()
-    print(" ")
+    display_roll(rolls)
+
 
     #sets the roll count for the round to 1
     round_roll_count = 1
@@ -136,34 +224,106 @@ def new_round():
     #asks the user for a reroll up to two times
     print("You have "+ str(3- round_roll_count) +" rolls remaining.")
 
-    get_choice()
+    round_done = get_choice(rolls)
+
+    #print("this is directly after the first get chouce",round_done)
+
     if round_done == False:
-        print(round_done)
         round_roll_count += 1
         print("You have "+ str(3- round_roll_count) +" rolls remaining.")
-        get_choice()
+        get_choice(rolls)
+
+    cat_selection = select_category_fun(rolls,categories)
+    categories[cat_selection][0]= False
+    print(cat_selection)
+
+
+    score_list = score_fun(rolls,cat_selection)
+    score_upper = score_list[0]
+    score_lower = score_list[1]
+    yahtzee = score_list[2]
+
+    print(score_list)
+
+    round_output["rolls"] = rolls
+    round_output["score_upper"] = score_upper
+    round_output["score_lower"] = score_lower
+    if yahtzee == True:
+        round_output["yahtzee"] = 1
     else:
-        pass
+        round_output["yahtzee"] = 0
+
+
+
 
 
 
     #round is scored here
     print(" ")
+
+
+
     #input_upper_lower()
 
     #round ends
     print("thank you.")
 
     # I forgot what this does
-    game[roundcount] = rolls
+    return round_output
 
 
 def play_yahtzee():
+    round_count = 1
+    score = 0
+    score_upper = 0
+    score_lower = 0
+    yahtzee = 0
+    score_list = [score_upper,score_lower,yahtzee]
+    game = {}
 
-    new_round()
+    #This is how scoring categories are tracked
 
-    print("Good Game")
+    categories = {1:[True,"Aces",1],2:[True,"Twos",2],3:[True,"Threes",3],4:[True,"Fours",4],5:[True,"Fives",5],6:[True,"Sixes",6],
+    7:[True,"Three of a Kind",7],8:[True,"Four of a Kind",8],9:[True,"Full House",9],10:[True,"Small Straight",10],
+    11:[True,"Large Straight",11],12:[True,"Chance",12],13:[True,"Yahtzee",13]}
 
-#play_yahtzee()
-round_roll_count = 1
-new_round()
+
+    while round_count < 3:
+        #this section lists the round number
+        print("Round "+ str(round_count)),
+        print(" ")
+
+        #runs 1 round
+        round_output = new_round(categories)
+
+
+        print("upper score from round output:", round_output["score_upper"])
+
+        #stores the round in a master game dictionary
+        game[round_count] = round_output
+
+        print("this is the value I'm trying to add to score_upper: ", round_output["score_upper"])
+        score_upper += round_output["score_upper"]
+        print("this is score_upper after attempting to add the round total", score_upper)
+        score_lower += round_output["score_lower"]
+        if round_output["yahtzee"] == True:
+            yahtzee += 1
+
+        score_list = [score_upper,score_lower,yahtzee]
+        print("score at the end of this round is: ",score_list)
+
+
+        round_count +=1
+
+
+
+    restart = raw_input("Good Game! Play again?")
+    if sanit(restart)[0] == "y":
+        play_yahtzee()
+
+
+
+if __name__ == '__main__':
+    play_yahtzee()
+
+#new_round(categories)
