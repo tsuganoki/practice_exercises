@@ -65,11 +65,16 @@ def reroll_choice():
 
     rerollyn = raw_input("Reroll? (Y / N) ")
     print(" ")
-    if sanit(rerollyn[0]) == "n":
+    try:
+        choice = sanit(rerollyn[0])
+    except:
+        print("I didn't understand that input. Please Try again.")
+        return reroll_choice()
+    if choice == "n":
         #if the user inputs a string starting with "n", no re-roll happens
         return True
 
-    elif sanit(rerollyn[0]) == "y":
+    elif choice == "y":
         #if the user inputs a string starting with "y"
         return False
     else:
@@ -115,8 +120,8 @@ def select_dice(rolls):
 
     user_selection_list = convert_to_list(user_selection)
     if len(user_selection_list) < 1:
-        print("Please type a letter or letters (not case sensitive)")
-        select_dice(rolls)
+        print("Your input was not understod. Please try again (not case sensitive)")
+        return select_dice(rolls)
     print("Rerolling....")
     rolls = reroll(user_selection_list,rolls)
     return rolls
@@ -283,7 +288,6 @@ def new_round(categories,game_score):
     print("You have %s rolls remaining." % (round_roll_count))
     while round_roll_count >0:
         reroll_choice_var = reroll_choice()
-        print(reroll_choice_var)
         if reroll_choice_var == False:
 
             rolls = select_dice(rolls)
