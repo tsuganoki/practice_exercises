@@ -25,9 +25,9 @@ https://github.com/Team-Code/KA_Offline -->
         padSize = 400;
         size(padSize,padSize);
         frameRate(30);
+        background(255);
 
         // ProgramCodeGoesHere
-        fill(255, 255, 255);
         var board = [[" ", " ", " "],[" ", " ", " "],[" ", " ", " "]];
         var mark;
         var pos = " ";
@@ -42,7 +42,9 @@ https://github.com/Team-Code/KA_Offline -->
 
         var drawBoard = function(board) {
            fill(255,255,255);
-           rect(boardOffset * -2,boardOffset * -2,padSize*2,padSize*2);
+           noStroke();
+           rect(0,0,padSize,padSize);
+           stroke(0);
            fill(0,0,0);
 
            strokeWeight(stWt);
@@ -213,30 +215,19 @@ var gameOverFun = function(winner) {
   textSize(18);
   noStroke();
   if (winner === " ") {
+    fill(230,100,100);
+    rect(padSize*(1/6),padSize*(5/9),padSize*(2/3),padSize*1/5);
     fill(0);
-    text("no winner",200,200)
+    text("No winner. Play Again?",padSize*2/7,padSize*(2/3));
   }else {
-    if (mouseX > (padSize/6) && mouseX < (padSize*(1/6)+padSize*(2/3)) && mouseY > (padSize/2) && mouseY < padSize/2+padSize/3) {
+      fill(255, 191, 0);
 
-
-      //fill(230,100,100);
-      fill(230,100,100);
-      rect(padSize*(1/6),padSize*(1/2),padSize*(2/3),padSize*1/3);
+      rect(padSize*(1/6),padSize*(5/9),padSize*(2/3),padSize*1/5);
 
       fill(0,0,0);
       text(winner +" wins! Play again?",padSize*2/7,padSize*(2/3));
 
 
-
-    }else {
-      fill(255,200,200);
-      rect(padSize*(1/6),padSize*(1/2),padSize*(2/3),padSize*1/3);
-
-      fill(0,0,0);
-      text(winner + " wins! Play again?",padSize*2/7,padSize*(2/3));
-
-
-    } // end of mouse over section
   } // end of Existant Winner Section
 } // end of Game Over Function
 
@@ -262,7 +253,6 @@ mouseClicked = function() {
           board[pos.x][pos.y] = mark;
           winner = scoreBoard(board);
           drawBoard(board);
-          displayRound(currentRound);
 
           currentRound += 1;
 
