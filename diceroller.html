@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!-- This is based on DillingerLee's great template here:
+https://github.com/Team-Code/KA_Offline -->
+<html>
+ <head>
+    <title>Processing.JS inside Webpages: Template</title>
+</head>
+ <body>
+    <p align="center">
+	<!--This draws the Canvas on the webpage -->
+      <canvas id="mycanvas"></canvas>
+    </p>
+ </body>
+
+ <!-- Run all the JavaScript stuff -->
+ <!-- Include the processing.js library -->
+ <!-- See https://khanacademy.zendesk.com/hc/en-us/articles/202260404-What-parts-of-ProcessingJS-does-Khan-Academy-support- for differences -->
+ <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script>
+
+ <script>
+    var sketchProc = function(processingInstance) {
+     with (processingInstance) {
+        size(400, 400);
+        frameRate(30);
+        background(225);
+
+        // ProgramCodeGoesHere
+
+
+
+// In this code, we write the current keyCode out to the canvas at the current mouse coordinates. Try typing while mousing over the canvas.
+
+var myString;
+var newString;
+var num;
+var i = 0;
+fill(0);
+keyPressed = function() {
+    //num = num*10 + (key.code() -48);
+    myString = key.toString()*10;
+    newString += myString;
+    text(newString, mouseX, mouseY);
+
+    text(myString,5+i,10);
+    i += 6
+
+
+    println(i);
+};
+/*
+var num;
+var die;
+var diceroller = function(){
+  var cont = true;
+
+
+  println("Dice to roll: ")
+
+
+}
+var input = " ";
+
+keyPressed = function() {
+  if (key <58){
+    num *=10;
+    num += key-48;
+    println(num);
+  } else {
+    println("Key is a letter: " + key)
+
+  }
+
+}
+diceroller();
+draw = function() {
+  fill(0);
+  textsize(12);
+  text(input, 50,100);
+
+
+
+
+};
+
+*/
+
+var helloWorld;
+
+/*
+
+#dice = input("Dice to roll: ")
+
+def sanitize(string):
+    string = string.lower()
+    newstring = ""
+    for i in string:
+        if i.isalnum():
+            newstring += i
+    return newstring
+
+def diceroller():
+
+    cont = True
+    while cont== True:
+        dicestring = sanitize(input("Dice to roll: "))
+
+        num = ""
+        die = ""
+        print(dicestring)
+        for i in range(len(dicestring)):
+
+            if dicestring[i] == "d":
+                num = dicestring[:i]
+                die = dicestring[(i+1):]
+
+        print(" ")
+        print("Rolling " + num + " D " + die + "...")
+        num = int(num)
+        die = int(die)
+        total = 0
+        while num > 0:
+            roll = randint(1,die)
+            total += roll
+            print(roll)
+            num -=1
+
+        print(" ")
+        print("Final roll total: " + str(total))
+        print(" ")
+        reroll = sanitize(input("Reroll? Y/N " ))
+        if reroll == "n" or reroll == "exit":
+            cont = False
+            print("Thanks for rolling")
+*/
+
+
+
+
+
+
+
+
+        //end of program. Don't fuck with anything below this line
+    }};
+
+    // Get the canvas that Processing-js will use
+    var canvas = document.getElementById("mycanvas");
+    // Pass the function sketchProc (defined in myCode.js) to Processing's constructor.
+    var processingInstance = new Processing(canvas, sketchProc);
+ </script>
+
+</html>
