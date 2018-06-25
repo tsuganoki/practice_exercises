@@ -3,7 +3,7 @@ from random import randint
 
 #dice = input("Dice to roll: ")
 info_msg = "\nWelcome to Tilia's Dice Roller.\n\nType a number followed by the letter \"d\" followed by another number to roll some dice.\nType \"q\" to exit.\nType \"help\" to repeat this prompt. \n"
-error_msg = "\nThat's not a valid dice roll. Please try again.\n"
+error_msg = "\nThat's not a valid roll. Please try again.\n"
 def sanitize(string):
     string = string.lower()
     newstring = ""
@@ -20,8 +20,9 @@ def diceroller():
 
         num = ""
         die = ""
-        print(dicestring)
+        #print(dicestring)
         if dicestring == "q":
+            print("Thanks for rolling!\n")
             break
         elif dicestring == "help":
             print(info_msg)
@@ -34,9 +35,12 @@ def diceroller():
             if dicestring[i] == "d":
                 num = dicestring[:i]
                 die = dicestring[(i+1):]
+        if not num.isdecimal() or not die.isdecimal():
+            print(error_msg)
+            continue
 
-        print(" ")
-        print("Rolling " + num + " D " + die + "...")
+
+        print("\nRolling " + num + " D " + die + "...")
         num = int(num)
         die = int(die)
         total = 0
@@ -47,12 +51,12 @@ def diceroller():
             num -=1
 
         print(" ")
-        print("Final roll total: " + str(total))
-        print(" ")
-        reroll = sanitize(input("Reroll? Y/N " ))
-        if reroll == "n" or reroll == "exit":
-            cont = False
-            print("Thanks for rolling")
+        print("Final roll total: " + str(total) + "\n")
+
+        #reroll = sanitize(input("Reroll? Y/N " ))
+        #if reroll == "n" or reroll == "exit":
+        #    cont = False
+            
 
 print(info_msg)
 diceroller()
