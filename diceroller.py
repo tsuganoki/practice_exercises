@@ -2,9 +2,12 @@
 from random import randint
 
 #dice = input("Dice to roll: ")
-info_msg = "\nWelcome to Tilia's Dice Roller.\n\nType a number followed by the letter \"d\" followed by another number to roll some dice.\nType \"q\" to exit.\nType \"help\" to repeat this prompt. \n"
+info_msg = "\nWelcome to Tilia's Dice Roller.\n\nType a number followed by the letter \"d\" followed by another number to roll some dice. The first number is the quantity of dice. The second number is the type of die or the number of sides on each die.\nType \"q\" to exit.\nType "r" to repeat the previous roll.\nType \"help\" to repeat this prompt. \n"
 
 error_msg = "\nThat's not a valid roll. Please try again.\n"
+
+prev_roll = None
+
 def err():
     print(error_msg)
 
@@ -60,8 +63,10 @@ def diceroller():
     it wil send the user back to the original prompt. 
     If the user types "help" it will display a helpful message.
     If the user types "q" (not case sensitive), it will end the program.
-    """
+    If the user types "r" (not case sensitive), it will reuse the previous roll.
     
+    """
+    prev_roll = None
     while True:
         dicestring = sanitize(input("\nDice to roll: "))
 
@@ -71,6 +76,12 @@ def diceroller():
         if dicestring == "q":
             print("Thanks for rolling!\n")
             break
+        elif dicestring == "r":
+            if prev_roll == None:
+                print("No Previous rolls available.")
+                continue
+            else:
+                dicestring = prev_roll
         elif dicestring == "help":
             print(info_msg)
             continue
@@ -100,7 +111,7 @@ def diceroller():
         if num > 1:
             display_total(total)
         crit_check(dicestring,total)
-
+        prev_roll = dicestring
 
         
 
