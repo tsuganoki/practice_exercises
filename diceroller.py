@@ -32,19 +32,19 @@ def roll_em(num,die):
     return total
 
 def display_total(total):
-    print("\nFinal roll total: {}\n".format(total))
+    print("\nFinal roll total: {}".format(total))
 
 def crit_check(dicestring,total):
     if dicestring =="1d20":
-        if total == 20:
-            print("!!! Critical threat !!! -- Rerolling 1 d20\n")
+        if total > 19:
+            print("\n!!! Critical threat !!! \n")
             reroll = randint(1,20)
-            print("Reroll: {}\n ".format(reroll))
+            print("Original roll: {0}    Reroll: {1}\n ".format(total,reroll))
             
-        elif total == 1:
-            print("!!! Critical threat !!! -- Rerolling 1 d20\n") 
+        elif total < 2:
+            print("!!! Critical threat !!! \n") 
             reroll = randint(1,20)
-            print("Reroll: {}\n".format(reroll))
+            print("Original Roll: {0}    Reroll: {1}\n ".format(total,reroll))
 
 
 
@@ -63,7 +63,7 @@ def diceroller():
     """
     
     while True:
-        dicestring = sanitize(input("Dice to roll: "))
+        dicestring = sanitize(input("\nDice to roll: "))
 
         num = ""
         die = ""
@@ -97,7 +97,8 @@ def diceroller():
         print("\nRolling {0} d{1}...".format(num,die))
 
         total = roll_em(num,die)
-        display_total(total)
+        if num > 1:
+            display_total(total)
         crit_check(dicestring,total)
 
 
