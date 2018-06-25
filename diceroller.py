@@ -41,7 +41,7 @@ def crit_check(dicestring,total):
             reroll = randint(1,20)
             print("Reroll: {}\n ".format(reroll))
             
-        elif total == 20:
+        elif total == 1:
             print("!!! Critical threat !!! -- Rerolling 1 d20\n") 
             reroll = randint(1,20)
             print("Reroll: {}\n".format(reroll))
